@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>For You - A Story Worth Telling</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', serif;
+            line-height: 1.5;
+            color: #333;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(255, 102, 102, 0.4) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(102, 126, 234, 0.4) 0%, transparent 50%),
+                radial-gradient(circle at 40% 80%, rgba(255, 183, 197, 0.4) 0%, transparent 50%),
+                linear-gradient(135deg, #ff6b6b 0%, #feca57 25%, #ff9ff3 50%, #54a0ff 75%, #5f27cd 100%);
+            min-height: 100vh;
+            animation: gradientShift 15s ease infinite;
+            background-size: 400% 400%;
+            overflow-x: hidden;
+        }
+
+        @keyframes gradientShift {
+            0%, 100% { background-position: 0% 50%; }
+            25% { background-position: 100% 50%; }
+            50% { background-position: 100% 100%; }
+            75% { background-position: 0% 100%; }
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(2px 2px at 20px 30px, rgba(255, 255, 255, 0.4), transparent),
+                radial-gradient(1px 1px at 40px 70px, rgba(255, 107, 107, 0.3), transparent),
+                radial-gradient(1px 1px at 90px 40px, rgba(84, 160, 255, 0.4), transparent);
+            background-repeat: repeat;
+            background-size: 150px 80px;
+            animation: sparkle 20s linear infinite;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        @keyframes sparkle {
+            0% { transform: translateY(0px); }
+            100% { transform: translateY(-80px); }
+        }
+
+        .container {
+            max-width: 100%;
+            margin: 0 auto;
+            padding: 0 15px;
+            position: relative;
+            z-index: 2;
+        }
+
+        nav {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            box-shadow: 0 4px 20px rgba(31, 38, 135, 0.37);
+        }
+
+        nav .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 15px;
+            min-height: 60px;
+        }
+
+        .logo {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .nav-menu {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            flex-direction: column;
+            padding: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            list-style: none;
+        }
+
+        .nav-menu.active {
+            display: flex;
+        }
+
+        .nav-menu li {
+            margin: 8px 0;
+        }
+
+        .nav-menu a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            transition: color 0.3s ease;
+            display: block;
+            padding: 10px;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .nav-menu a:hover,
+        .nav-menu a.active {
+            color: #667eea;
+            background: rgba(102, 126, 234, 0.1);
+        }
+
+        .mobile-menu-toggle {
+            display: block;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #667eea;
+        }
+
+        .page-section {
+            display: none;
+            min-height: 100vh;
+            padding: 80px 0 30px;
+            animation: fadeIn 0.8s ease-in-out;
+        }
+
+        .page-section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .page-content {
+            background: rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 15px;
+            padding: 25px 20px;
+            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
+            position: relative;
+            overflow: hidden;
+            margin: 0 10px;
+        }
+
+        .page-content::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            animation: shimmerContent 4s ease infinite;
+            pointer-events: none;
+        }
+
+        @keyframes shimmerContent {
+            0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+        }
+
+        h1 {
+            color: #fff;
+            font-size: 2.2rem;
+            margin-bottom: 1rem;
+            text-align: center;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            background: linear-gradient(45deg, #ff6b6b, #feca57, #ff9ff3, #54a0ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: colorFlow 3s ease-in-out infinite;
+            line-height: 1.2;
+        }
+
+        @keyframes colorFlow {
+            0%, 100% { filter: hue-rotate(0deg); }
+            50% { filter: hue-rotate(180deg); }
+        }
+
+        h2 {
+            color: #764ba2;
+            font-size: 1.6rem;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        h3 {
+            color: #667eea;
+            font-size: 1.3rem;
+            margin-bottom: 0.8rem;
+        }
+
+        p {
+            font-size: 1rem;
+            margin-bottom: 1.2rem;
+            color: #555;
+            text-align: left;
+        }
+
+        .hero {
+            text-align: center;
+            padding: 20px 0;
+        }
+
+        .hero h1 {
+            font-size: 2.5rem;
+            background: linear-gradient(45deg, #ff6b6b, #feca57, #ff9ff3, #54a0ff, #5f27cd);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1.5rem;
+            text-shadow: 0 0 30px rgba(255, 107, 107, 0.5);
+            animation: glow 2s ease-in-out infinite alternate, float 3s ease-in-out infinite;
+        }
+
+        @keyframes glow {
+            from { text-shadow: 0 0 20px rgba(255, 107, 107, 0.5); }
+            to { text-shadow: 0 0 30px rgba(84, 160, 255, 0.8); }
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-8px); }
+        }
+
+        .hero-subtitle {
+            font-size: 1.1rem;
+            color: #666;
+            margin-bottom: 2rem;
+            padding: 0 10px;
+        }
+
+        .cta-button {
+            display: inline-block;
+            background: linear-gradient(45deg, #ff6b6b, #feca57, #ff9ff3, #54a0ff);
+            background-size: 300% 300%;
+            color: white;
+            padding: 12px 25px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            animation: gradientMove 3s ease infinite;
+            box-shadow: 0 0 20px rgba(255, 107, 107, 0.4);
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+            font-size: 0.9rem;
+            cursor: pointer;
+            border: none;
+        }
+
+        @keyframes gradientMove {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 0 30px rgba(255, 107, 107, 0.6);
+        }
+
+        .feelings-section {
+            margin-bottom: 2rem;
+        }
+
+        .memory-item {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-left: 4px solid #ff6b6b;
+        }
+
+        .fade-in {
+            animation: fadeIn 0.8s ease-in-out;
+        }
+
+        @media (min-width: 768px) {
+            .container {
+                max-width: 800px;
+                padding: 0 30px;
+            }
+
+            .mobile-menu-toggle {
+                display: none;
+            }
+
+            .nav-menu {
+                display: flex;
+                position: static;
+                flex-direction: row;
+                background: none;
+                box-shadow: none;
+                padding: 0;
+                width: auto;
+            }
+
+            .nav-menu li {
+                margin: 0 0 0 20px;
+            }
+
+            .nav-menu a {
+                padding: 8px 15px;
+            }
+
+            .page-content {
+                padding: 40px;
+                margin: 0;
+            }
+
+            h1 {
+                font-size: 3rem;
+            }
+
+            .hero h1 {
+                font-size: 3.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="container">
+            <div class="logo">For You ✨</div>
+            <button class="mobile-menu-toggle" onclick="toggleMenu()">☰</button>
+            <ul class="nav-menu" id="navMenu">
+                <li><a href="#" onclick="showSection('home')" class="nav-link active">Home</a></li>
+                <li><a href="#" onclick="showSection('story')" class="nav-link">Our Story</a></li>
+                <li><a href="#" onclick="showSection('memories')" class="nav-link">Memories</a></li>
+                <li><a href="#" onclick="showSection('feelings')" class="nav-link">Feelings</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Home Section -->
+    <section id="home" class="page-section active">
+        <div class="container">
+            <div class="page-content">
+                <div class="hero">
+                    <h1>For You, Raghavi</h1>
+                    <p class="hero-subtitle">A collection of thoughts, memories, and feelings that words can barely capture</p>
+                    <button class="cta-button" onclick="showSection('story')">Begin Our Journey</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Story Section -->
+    <section id="story" class="page-section">
+        <div class="container">
+            <div class="page-content fade-in">
+                <h1>Our Story</h1>
+                
+                <h3>🌟 How It All Began</h3>
+                <p>Sometimes the most beautiful stories begin with the simplest moments. Ours started when fate decided to intertwine our paths in ways neither of us expected.</p>
+                
+                <h3>✨ The Connection</h3>
+                <p>From the very first conversation, there was something different about the way we connected. It wasn't just words being exchanged – it was souls recognizing something special in each other.</p>
+                
+                <h3>💫 Growing Together</h3>
+                <p>Every day since then has been a new chapter in our story. Each conversation, each laugh, each moment of understanding has woven itself into the beautiful tapestry of what we've become.</p>
+                
+                <h3>🎯 Looking Forward</h3>
+                <p>This is just the beginning, Raghavi. Our story is still being written, and I can't wait to see what beautiful chapters await us.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Memories Section -->
+    <section id="memories" class="page-section">
+        <div class="container">
+            <div class="page-content fade-in">
+                <h1>Precious Memories</h1>
+                
+                <div class="memory-item">
+                    <h3>🌸 First Conversations</h3>
+                    <p>I remember how naturally our conversations flowed, like we'd known each other for years. There was an ease, a comfort that felt like coming home.</p>
+                </div>
+                
+                <div class="memory-item">
+                    <h3>😊 Your Laugh</h3>
+                    <p>The first time I made you laugh, really laugh, I knew I wanted to hear that sound for the rest of my life. It's pure joy in audio form.</p>
+                </div>
+                
+                <div class="memory-item">
+                    <h3>🌙 Late Night Talks</h3>
+                    <p>Those moments when time seemed to stop, and it was just us sharing thoughts, dreams, and pieces of our souls. Those are the memories I treasure most.</p>
+                </div>
+                
+                <div class="memory-item">
+                    <h3>💝 Little Moments</h3>
+                    <p>The way you say my name, your thoughtful messages, the care you show – these small moments have created the biggest impact on my heart.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Feelings Section -->
+    <section id="feelings" class="page-section">
+        <div class="container">
+            <div class="page-content fade-in">
+                <h1>What You Mean to Me</h1>
+                
+                <div class="feelings-section">
+                    <h3>💫 The Impact You've Had</h3>
+                    <p>Raghavi, in the short time since I've known about you, you've already changed something in me. You've inspired me to be better, to try harder, and to believe that some people are worth going the extra mile for.</p>
+                    
+                    <h3>🌟 Your Light</h3>
+                    <p>There's something about you that lights up even the darkest corners of my world. Your presence, even in messages, brings a warmth that I never knew I was missing.</p>
+                    
+                    <h3>💖 Gratitude</h3>
+                    <p>I'm grateful for every moment, every conversation, every smile you've shared with me. You've shown me what it means to truly care about someone, and for that, I'll always be thankful.</p>
+                    
+                    <h3>🌈 Hope</h3>
+                    <p>You've given me hope – hope for beautiful tomorrows, hope for deeper connections, hope for a future filled with joy and love. You've shown me that some people are worth believing in.</p>
+                    
+                    <h3>💝 Simply You</h3>
+                    <p>At the end of the day, it's not just what you do or say – it's who you are. Your kindness, your strength, your beautiful heart. You're extraordinary, Raghavi, and I hope you never forget that.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        let currentSection = 'home';
+
+        function showSection(sectionId) {
+            // Hide all sections
+            const sections = document.querySelectorAll('.page-section');
+            sections.forEach(section => {
+                section.classList.remove('active');
+            });
+
+            // Show the selected section
+            const targetSection = document.getElementById(sectionId);
+            if (targetSection) {
+                targetSection.classList.add('active');
+                currentSection = sectionId;
+            }
+
+            // Update navigation
+            const navLinks = document.querySelectorAll('.nav-link');
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+            });
+
+            // Find and activate the corresponding nav link
+            const activeLink = document.querySelector(`[onclick="showSection('${sectionId}')"]`);
+            if (activeLink) {
+                activeLink.classList.add('active');
+            }
+
+            // Close mobile menu if open
+            const navMenu = document.getElementById('navMenu');
+            navMenu.classList.remove('active');
+
+            // Scroll to top
+            window.scrollTo(0, 0);
+        }
+
+        function toggleMenu() {
+            const navMenu = document.getElementById('navMenu');
+            navMenu.classList.toggle('active');
+        }
+
+        // Close mobile menu when clicking outside
+        document.addEventListener('click', function(event) {
+            const navMenu = document.getElementById('navMenu');
+            const menuToggle = document.querySelector('.mobile-menu-toggle');
+            
+            if (!navMenu.contains(event.target) && !menuToggle.contains(event.target)) {
+                navMenu.classList.remove('active');
+            }
+        });
+
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', function() {
+            showSection('home');
+        });
+    </script>
+</body>
+</html>
